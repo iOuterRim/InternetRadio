@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "InternetRadio (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "InternetRadio (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

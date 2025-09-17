@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="InternetRadio.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:InternetRadio"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="InternetRadio">
+
+    <Window.SystemBackdrop>
+        <MicaBackdrop />
+    </Window.SystemBackdrop>
+
+    <Grid Background="White">
+        <StackPanel>
+        <!-- <StackPanel Margin="20"> -->
+
+            <StackPanel x:Name="AppTitleBar" 
+                    Orientation="Horizontal"
+                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                    Grid.Row="0" 
+                    Height="32">
+                <Image Source="Assets/internetradio_24x24.png"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Width="24" Height="24"
+                        Margin="8,8,0,0"/>
+                <TextBlock x:Name="AppTitleTextBlock" Text="Internet Radio"
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        TextWrapping="NoWrap"
+                        Style="{StaticResource CaptionTextBlockStyle}" 
+                        VerticalAlignment="Center"
+                        Margin="8,8,0,0"/>
+            </StackPanel>
+
+            <TextBlock FontSize="24" FontWeight="Bold" Text="Internet Radio" />
+            <TextBox x:Name="SearchBox" PlaceholderText="Search stations..." Margin="0,10,0,10"/>
+            <ListView x:Name="StationsList" Height="300">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Name}" FontSize="18" Margin="5"/>
+                            <Button Content="Play" Click="PlayButton_Click" Tag="{Binding Url}" Margin="5"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <MediaPlayerElement x:Name="Player" AutoPlay="True" AreTransportControlsEnabled="True" Height="100"/>
+        </StackPanel>
+    </Grid>
+</Window>
