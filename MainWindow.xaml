@@ -13,13 +13,13 @@
         <MicaBackdrop />
     </Window.SystemBackdrop>
 
-    <Grid Background="White">
+    <Grid Background="LightSteelBlue">
         <StackPanel>
         <!-- <StackPanel Margin="20"> -->
 
             <StackPanel x:Name="AppTitleBar" 
                     Orientation="Horizontal"
-                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                    Background="Transparent"
                     Grid.Row="0" 
                     Height="32">
                 <Image Source="Assets/internetradio_24x24.png"
@@ -36,7 +36,7 @@
                         Margin="8,8,0,0"/>
             </StackPanel>
 
-            <TextBlock FontSize="24" FontWeight="Bold" Text="Internet Radio" />
+            <!-- <TextBlock FontSize="24" FontWeight="Bold" Text="Internet Radio" /> -->
             <TextBox x:Name="SearchBox" PlaceholderText="Search stations..." Margin="0,10,0,10"/>
             <ListView x:Name="StationsList" Height="300">
                 <ListView.ItemTemplate>
