@@ -34,6 +34,13 @@ namespace InternetRadio
         public MainWindow()
         {
             InitializeComponent();
+
+            // Let window use system theme initially
+            if (Content is FrameworkElement rootElement)
+            {
+                rootElement.RequestedTheme = ElementTheme.Default;
+            }
+
             // Set custom window icon
             //WindowIconHelper.SetWindowIcon(this, "Assets\\AppIcon.ico");
             ExtendsContentIntoTitleBar = true;
@@ -63,8 +70,25 @@ namespace InternetRadio
                 Player.Source = mediaSource;
             }
         }
+
+        private void ThemeToggleButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Content is FrameworkElement rootElement)
+            {
+                // Check current theme and toggle
+                if (rootElement.RequestedTheme == ElementTheme.Light)
+                {
+                    rootElement.RequestedTheme = ElementTheme.Dark;
+                }
+                else
+                {
+                    rootElement.RequestedTheme = ElementTheme.Light;
+                }
+            }
+        }
+
     }
-    
+
 
     public class RadioStation
     {
