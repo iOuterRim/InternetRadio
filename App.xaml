@@ -11,6 +11,41 @@
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
+            <ResourceDictionary.ThemeDictionaries>
+
+                <!-- Custom Light Theme -->
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="AppBackgroundBrush" Color="#FFFDF6E3"/>
+                    <!-- light beige -->
+                    <SolidColorBrush x:Key="AppForegroundBrush" Color="#FF073642"/>
+                    <!-- dark teal -->
+                    <SolidColorBrush x:Key="SystemAccentColor" Color="#FF268BD2"/>
+                    <!-- custom accent blue -->
+
+                    <!-- Important system overrides -->
+                    <SolidColorBrush x:Key="TextFillColorPrimaryBrush" Color="#FF073642"/>
+                    <SolidColorBrush x:Key="ButtonBackground" Color="#FFEEE8D5"/>
+                    <SolidColorBrush x:Key="ButtonForeground" Color="#FF073642"/>
+                    <SolidColorBrush x:Key="ListViewItemForeground" Color="#FF073642"/>
+                </ResourceDictionary>
+
+                <!-- Custom Dark Theme -->
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="AppBackgroundBrush" Color="#FF002B36"/>
+                    <!-- dark teal -->
+                    <SolidColorBrush x:Key="AppForegroundBrush" Color="#FFEEE8D5"/>
+                    <!-- light beige -->
+                    <SolidColorBrush x:Key="SystemAccentColor" Color="#FFB58900"/>
+                    <!-- warm amber -->
+
+                    <!-- Important system overrides -->
+                    <SolidColorBrush x:Key="TextFillColorPrimaryBrush" Color="#FFEEE8D5"/>
+                    <SolidColorBrush x:Key="ButtonBackground" Color="#FF073642"/>
+                    <SolidColorBrush x:Key="ButtonForeground" Color="#FFEEE8D5"/>
+                    <SolidColorBrush x:Key="ListViewItemForeground" Color="#FFEEE8D5"/>
+                </ResourceDictionary>
+
+            </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

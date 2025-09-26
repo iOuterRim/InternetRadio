@@ -13,8 +13,8 @@
         <MicaBackdrop />
     </Window.SystemBackdrop>
 
-    <Grid>
-        <StackPanel Background="LightSteelBlue">
+    <Grid Background="{ThemeResource AppBackgroundBrush}">
+        <StackPanel>
         <!-- <StackPanel Margin="20"> -->
 
             <StackPanel x:Name="AppTitleBar" 

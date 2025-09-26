@@ -31,6 +31,18 @@ namespace InternetRadio
     {
         public ObservableCollection<RadioStation> Stations { get; set; } = new();
 
+        private readonly List<RadioStation> FallbackStations = new()
+        {
+            new RadioStation { Name = "BBC World Service", Url = "http://stream.live.vc.bbcmedia.co.uk/bbc_world_service" },
+            new RadioStation { Name = "NPR News", Url = "https://npr-ice.streamguys1.com/live.mp3" },
+            new RadioStation { Name = "Classic FM (UK)", Url = "https://media-ice.musicradio.com/ClassicFMMP3" },
+            new RadioStation { Name = "Jazz24 (Seattle)", Url = "https://live.wostreaming.net/direct/ppm-jazz24mp3-ibc1" },
+            new RadioStation { Name = "Radio Paradise (Main)", Url = "http://stream.radioparadise.com/aac-320" },
+            new RadioStation { Name = "Deutschlandfunk", Url = "https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3" },
+            new RadioStation { Name = "Soma FM - Left Coast 70s", Url = "https://ice6.somafm.com/seventies-320-mp3" },
+        };
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -50,14 +62,27 @@ namespace InternetRadio
         }
         private async Task LoadStationsAsync()
         {
-            using var client = new HttpClient();
-            var response = await client.GetStringAsync("https://de1.api.radio-browser.info/json/stations/topclick/10");
-            var stations = JsonSerializer.Deserialize<RadioStation[]>(response);
-            if (stations != null)
+            try
             {
-                foreach (var station in stations)
-                    Stations.Add(station);
+                using var client = new HttpClient();
+                var response = await client.GetStringAsync("https://de1.api.radio-browser.info/json/stations/topclick/10");
+                var stations = JsonSerializer.Deserialize<RadioStation[]>(response);
+                if (stations != null)
+                {
+                    foreach (var station in stations)
+                        Stations.Add(station);
+                }
             }
+
+            catch
+            {
+                // Ignore and fall back
+            }
+
+            // Fallback if API fails
+            foreach (var station in FallbackStations)
+                Stations.Add(station);
+
         }
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
@@ -86,7 +111,6 @@ namespace InternetRadio
                 }
             }
         }
-
     }
 
 
