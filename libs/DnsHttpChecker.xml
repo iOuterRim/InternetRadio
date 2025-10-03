@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DnsHttpChecker</name>
+    </assembly>
+    <members>
+        <member name="T:DnsHttpCheckerLib.DnsHttpChecker">
+            <summary>
+            Provides DNS resolution, reverse DNS, and HTTP/HTTPS health checks
+            for all resolved IP addresses of a given domain.
+            </summary>
+            <remarks>
+            Version 1.0.0 (2025-09-30)
+            - Initial release with DNS resolution, reverse DNS, and HTTPS probing
+            - Supports IPv4 and IPv6
+            </remarks>
+        </member>
+        <member name="T:DnsHttpCheckerLib.DnsHttpChecker.Result">
+            <summary>
+            Represents the result of a single IP address check.
+            </summary>
+        </member>
+        <member name="P:DnsHttpCheckerLib.DnsHttpChecker.Result.IP">
+            <summary>
+            The resolved IP address (IPv4 or IPv6).
+            </summary>
+            <value>
+            Defaults to <c>0.0.0.0</c>.
+            </value>
+        </member>
+        <member name="P:DnsHttpCheckerLib.DnsHttpChecker.Result.Ptr">
+            <summary>
+            Reverse DNS lookup result (PTR record).
+            </summary>
+            <value>
+            Defaults to empty string.
+            </value>
+        </member>
+        <member name="P:DnsHttpCheckerLib.DnsHttpChecker.Result.Url">
+            <summary>
+            Full request URL including scheme and host.
+            </summary>
+            <value>
+            Defaults to empty string.
+            </value>
+        </member>
+        <member name="P:DnsHttpCheckerLib.DnsHttpChecker.Result.StatusLine">
+            <summary>
+            HTTP response status line from the server.
+            </summary>
+            <value>
+            Defaults to empty string.
+            </value>
+        </member>
+        <member name="P:DnsHttpCheckerLib.DnsHttpChecker.Result.StatusCode">
+            <summary>
+            The parsed HTTP status code (e.g. 200, 404).
+            </summary>
+            <value>
+            Defaults to empty string.
+            </value>
+        </member>
+        <member name="P:DnsHttpCheckerLib.DnsHttpChecker.Result.TimeMs">
+            <summary>
+            Round-trip time in milliseconds for the request.
+            </summary>
+            <value> 
+            Defaults to 0.
+            </value>
+        </member>
+        <member name="P:DnsHttpCheckerLib.DnsHttpChecker.Result.Error">
+            <summary>
+            Error description if the request failed.
+            </summary>
+            <value>
+            Defaults to empty string.
+            </value>
+        </member>
+        <member name="M:DnsHttpCheckerLib.DnsHttpChecker.#ctor(System.String,System.Int32)">
+            <summary>
+            Initializes a new instance of <see cref="T:DnsHttpCheckerLib.DnsHttpChecker"/>.
+            </summary>
+            <param name="domain">The domain to resolve and check.</param>
+            <param name="timeoutMs">Timeout in milliseconds for network operations.</param>
+        </member>
+        <member name="M:DnsHttpCheckerLib.DnsHttpChecker.CheckAllAsync">
+            <summary>
+            Resolves the domain and checks all resolved IPs.
+            </summary>
+            <returns>A list of <see cref="T:DnsHttpCheckerLib.DnsHttpChecker.Result"/> objects with details for each IP.</returns>
+        </member>
+        <member name="M:DnsHttpCheckerLib.DnsHttpChecker.CheckSingleAsync(System.Net.IPAddress)">
+            <summary>
+            Checks a single IP address for HTTPS availability and status.
+            </summary>
+            <param name="ip">The target IP address.</param>
+            <returns>A <see cref="T:DnsHttpCheckerLib.DnsHttpChecker.Result"/> object containing details about the probe.</returns>
+        </member>
+        <member name="M:DnsHttpCheckerLib.DnsHttpChecker.CheckServerAsync(System.Net.IPAddress,System.String,System.Int32)">
+            <summary>
+            Attempts to connect to the specified server over TLS and issue a basic HTTP request.
+            </summary>
+            <param name="ip">The target server IP address (IPv4 or IPv6).</param>
+            <param name="domain">
+            The domain name to present in the TLS SNI (Server Name Indication) extension and
+            the HTTP <c>Host</c> header. Required for virtual-hosted servers with valid certificates.
+            </param>
+            <param name="port">The TCP port to connect to (typically 443 for HTTPS).</param>
+            <returns>
+            A task that resolves to a string containing either:
+            <list type="bullet">
+              <item>
+                <description>The HTTP status line (e.g. <c>HTTP/1.1 200 OK</c>) if the request succeeds.</description>
+              </item>
+              <item>
+                <description>An error description (e.g. <c>SSL ERROR: ...</c>) if the connection or handshake fails.</description>
+              </item>
+            </list>
+            </returns>
+            <remarks>
+            <para>Behavior:</para>
+            <list type="bullet">
+              <item>Opens a raw TCP connection to <paramref name="ip"/>:<paramref name="port"/>.</item>
+              <item>Negotiates TLS with SNI set to <paramref name="domain"/>.</item>
+              <item>Sends a minimal <c>HEAD / HTTP/1.1</c> request.</item>
+              <item>Parses and returns only the first line of the server response.</item>
+            </list>
+            <para>Exceptions are caught and converted into error strings for easier diagnostics.</para>
+            </remarks>
+        </member>
+    </members>
+</doc>

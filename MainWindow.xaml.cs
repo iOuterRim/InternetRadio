@@ -1,3 +1,4 @@
+using DnsHttpCheckerLib;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -18,6 +19,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Media.Core;
+using static System.Net.WebRequestMethods;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -62,10 +64,29 @@ namespace InternetRadio
         }
         private async Task LoadStationsAsync()
         {
+            string stations_url_search_part = "json/stations/topclick/10";
+            string stations_url = "https://de1.api.radio-browser.info/" + stations_url_search_part;
+
             try
             {
+                var checker = new DnsHttpChecker("all.api.radio-browser.info");
+                var results = await checker.CheckAllAsync();
+
+                if (results != null)
+                {
+                    foreach (var result in results)
+                    {
+                        if (result.StatusCode == "200" && !string.IsNullOrEmpty(result.Ptr))
+                        {
+                            stations_url = "https://" + result.Ptr + "/" + stations_url_search_part;
+                            break;
+                        }                           
+                    }
+                }
+                
+
                 using var client = new HttpClient();
-                var response = await client.GetStringAsync("https://de1.api.radio-browser.info/json/stations/topclick/10");
+                var response = await client.GetStringAsync(stations_url);
                 var stations = JsonSerializer.Deserialize<RadioStation[]>(response);
                 if (stations != null)
                 {

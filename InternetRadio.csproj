@@ -32,6 +32,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+	<Reference Include="DnsHttpChecker">
+	<HintPath>libs\DnsHttpChecker.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
 	<!-- Project assets (icon, etc.) -->
 	<Content Include="Assets\AppIcon.ico">
 	  <Pack>true</Pack>
