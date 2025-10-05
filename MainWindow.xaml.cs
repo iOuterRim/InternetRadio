@@ -64,8 +64,9 @@ namespace InternetRadio
         }
         private async Task LoadStationsAsync()
         {
-            string stations_url_search_part = "json/stations/topclick/10";
-            string stations_url = "https://de1.api.radio-browser.info/" + stations_url_search_part;
+            string stations_url_search_part = "/json/stations/topclick/10";
+            // stations url with fallback to a specific server
+            string stations_url = "https://de1.api.radio-browser.info" + stations_url_search_part;
 
             try
             {
@@ -76,9 +77,9 @@ namespace InternetRadio
                 {
                     foreach (var result in results)
                     {
-                        if (result.StatusCode == "200" && !string.IsNullOrEmpty(result.Ptr))
+                        if (result.StatusCode == "200" && !string.IsNullOrEmpty(result.Url))
                         {
-                            stations_url = "https://" + result.Ptr + "/" + stations_url_search_part;
+                            stations_url = result.Url + stations_url_search_part;
                             break;
                         }                           
                     }

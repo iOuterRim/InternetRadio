@@ -39,6 +39,7 @@
         <member name="P:DnsHttpCheckerLib.DnsHttpChecker.Result.Url">
             <summary>
             Full request URL including scheme and host.
+            PTR record is used in URL if available.
             </summary>
             <value>
             Defaults to empty string.
