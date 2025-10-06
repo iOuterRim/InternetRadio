@@ -42,7 +42,7 @@
                     Click="ThemeToggleButton_Click"
                     HorizontalAlignment="Right"
                     Margin="8"/>
-            <TextBox x:Name="SearchBox" PlaceholderText="Search stations..." Margin="0,10,0,10"/>
+            <TextBox x:Name="StatusPane" IsReadOnly="True" PlaceholderText="" Margin="0,10,0,10"/>
             <ListView x:Name="StationsList" Height="300">
                 <ListView.ItemTemplate>
                     <DataTemplate>

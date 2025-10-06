@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Media.Core;
-using static System.Net.WebRequestMethods;
+
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -38,10 +38,11 @@ namespace InternetRadio
             new RadioStation { Name = "BBC World Service", Url = "http://stream.live.vc.bbcmedia.co.uk/bbc_world_service" },
             new RadioStation { Name = "NPR News", Url = "https://npr-ice.streamguys1.com/live.mp3" },
             new RadioStation { Name = "Classic FM (UK)", Url = "https://media-ice.musicradio.com/ClassicFMMP3" },
-            new RadioStation { Name = "Jazz24 (Seattle)", Url = "https://live.wostreaming.net/direct/ppm-jazz24mp3-ibc1" },
-            new RadioStation { Name = "Radio Paradise (Main)", Url = "http://stream.radioparadise.com/aac-320" },
+            new RadioStation { Name = "1.FM - Adore Jazz Radio (CH)", Url = "http://strm112.1.fm/ajazz_mobile_mp3" },
+            new RadioStation { Name = "Radio Paradise Mellow Mix 320k AAC", Url = "http://stream.radioparadise.com/mellow-320" },
             new RadioStation { Name = "Deutschlandfunk", Url = "https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3" },
             new RadioStation { Name = "Soma FM - Left Coast 70s", Url = "https://ice6.somafm.com/seventies-320-mp3" },
+            new RadioStation { Name = "Klassik Radio - Live", Url = "https://live.streams.klassikradio.de/klassikradio-deutschland/stream/mp3" },
         };
 
 
@@ -67,6 +68,11 @@ namespace InternetRadio
             string stations_url_search_part = "/json/stations/topclick/10";
             // stations url with fallback to a specific server
             string stations_url = "https://de1.api.radio-browser.info" + stations_url_search_part;
+
+            if (StatusPane != null)
+            {
+                StatusPane.Text = "Loading stations...";
+            }
 
             try
             {
@@ -105,6 +111,11 @@ namespace InternetRadio
             foreach (var station in FallbackStations)
                 Stations.Add(station);
 
+            if (StatusPane != null)
+            {
+                StatusPane.Text = "";
+            }
+
         }
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
@@ -115,6 +126,12 @@ namespace InternetRadio
             {
                 var mediaSource = MediaSource.CreateFromUri(new Uri(streamUrl));
                 Player.Source = mediaSource;
+            }
+
+            // update SearchBox with the station name
+            if (button.DataContext is RadioStation station)
+            {
+                StatusPane.Text = $"Now Playing: {station.Name}";
             }
         }
 
