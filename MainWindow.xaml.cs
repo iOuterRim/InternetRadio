@@ -1,24 +1,10 @@
-using DnsHttpCheckerLib;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Media.Core;
+using InternetRadio.Models;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -32,20 +18,7 @@ namespace InternetRadio
     public sealed partial class MainWindow : Window
     {
         public ObservableCollection<RadioStation> Stations { get; set; } = new();
-
-        private readonly List<RadioStation> FallbackStations = new()
-        {
-            new RadioStation { Name = "BBC World Service", Url = "http://stream.live.vc.bbcmedia.co.uk/bbc_world_service" },
-            new RadioStation { Name = "NPR News", Url = "https://npr-ice.streamguys1.com/live.mp3" },
-            new RadioStation { Name = "Classic FM (UK)", Url = "https://media-ice.musicradio.com/ClassicFMMP3" },
-            new RadioStation { Name = "1.FM - Adore Jazz Radio (CH)", Url = "http://strm112.1.fm/ajazz_mobile_mp3" },
-            new RadioStation { Name = "Radio Paradise Mellow Mix 320k AAC", Url = "http://stream.radioparadise.com/mellow-320" },
-            new RadioStation { Name = "Deutschlandfunk", Url = "https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3" },
-            new RadioStation { Name = "Soma FM - Left Coast 70s", Url = "https://ice6.somafm.com/seventies-320-mp3" },
-            new RadioStation { Name = "Klassik Radio - Live", Url = "https://live.streams.klassikradio.de/klassikradio-deutschland/stream/mp3" },
-        };
-
-
+       
         public MainWindow()
         {
             InitializeComponent();
@@ -65,57 +38,18 @@ namespace InternetRadio
         }
         private async Task LoadStationsAsync()
         {
-            string stations_url_search_part = "/json/stations/topclick/10";
-            // stations url with fallback to a specific server
-            string stations_url = "https://de1.api.radio-browser.info" + stations_url_search_part;
-
             if (StatusPane != null)
-            {
                 StatusPane.Text = "Loading stations...";
-            }
 
-            try
-            {
-                var checker = new DnsHttpChecker("all.api.radio-browser.info");
-                var results = await checker.CheckAllAsync();
+            var service = new Services.RadioBrowserService();
+            var stations = await service.GetStationsAsync();
 
-                if (results != null)
-                {
-                    foreach (var result in results)
-                    {
-                        if (result.StatusCode == "200" && !string.IsNullOrEmpty(result.Url))
-                        {
-                            stations_url = result.Url + stations_url_search_part;
-                            break;
-                        }                           
-                    }
-                }
-                
-
-                using var client = new HttpClient();
-                var response = await client.GetStringAsync(stations_url);
-                var stations = JsonSerializer.Deserialize<RadioStation[]>(response);
-                if (stations != null)
-                {
-                    foreach (var station in stations)
-                        Stations.Add(station);
-                }
-            }
-
-            catch
-            {
-                // Ignore and fall back
-            }
-
-            // Fallback if API fails
-            foreach (var station in FallbackStations)
+            Stations.Clear();
+            foreach (var station in stations)
                 Stations.Add(station);
 
             if (StatusPane != null)
-            {
                 StatusPane.Text = "";
-            }
-
         }
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
@@ -151,16 +85,4 @@ namespace InternetRadio
             }
         }
     }
-
-
-    public class RadioStation
-    {
-        [JsonPropertyName("name")]
-        public string Name { get; set; } = string.Empty;
-
-        [JsonPropertyName("url_resolved")]
-        public string Url { get; set; } = string.Empty;
-    }
-
-
 }
