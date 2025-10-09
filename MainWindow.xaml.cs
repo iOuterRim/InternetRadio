@@ -34,10 +34,10 @@ namespace InternetRadio
         {
             InitializeComponent();
 
-            // use the light theme initially
+            // use the Dark theme initially
             if (Content is FrameworkElement rootElement)
             {
-                rootElement.RequestedTheme = ElementTheme.Light;
+                rootElement.RequestedTheme = ElementTheme.Dark;
             }
 
             // Set custom window icon

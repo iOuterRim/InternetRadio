@@ -18,13 +18,15 @@ namespace InternetRadio.Services
             new RadioStation { Name = "BBC World Service", Url = "http://stream.live.vc.bbcmedia.co.uk/bbc_world_service" },
             new RadioStation { Name = "NPR News", Url = "https://npr-ice.streamguys1.com/live.mp3" },
             new RadioStation { Name = "Classic FM (UK)", Url = "https://media-ice.musicradio.com/ClassicFMMP3" },
-            new RadioStation { Name = "1.FM - Adore Jazz Radio (CH)", Url = "http://strm112.1.fm/ajazz_mobile_mp3" },
-            new RadioStation { Name = "1.FM - Chillout Lounge Radio (CH)", Url = "http://strm112.1.fm/chilloutlounge_mobile_mp3" },
-            new RadioStation { Name = "1.FM - Radio Gaia (CH)", Url = "http://strm112.1.fm/radiogaia_mobile_mp3" }, 
+            new RadioStation { Name = "1.FM - Adore Jazz Radio", Url = "http://strm112.1.fm/ajazz_mobile_mp3" },
+            new RadioStation { Name = "1.FM - Chillout Lounge Radio", Url = "http://strm112.1.fm/chilloutlounge_mobile_mp3" },
+            new RadioStation { Name = "1.FM - Radio Gaia", Url = "http://strm112.1.fm/radiogaia_mobile_mp3" },
+            new RadioStation { Name = "1.FM - Costa Del Mar", Url = "http://strm112.1.fm/costadelmarchillout_mobile_mp3" },
             new RadioStation { Name = "Radio Paradise Mellow Mix 320k AAC", Url = "http://stream.radioparadise.com/mellow-320" },
             new RadioStation { Name = "Deutschlandfunk", Url = "https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3" },
             new RadioStation { Name = "Soma FM - Left Coast 70s", Url = "https://ice6.somafm.com/seventies-320-mp3" },
             new RadioStation { Name = "Klassik Radio - Live", Url = "https://live.streams.klassikradio.de/klassikradio-deutschland/stream/mp3" },
+            new RadioStation { Name = "Absolut Relax", Url = "https://absolut-relax.live-sm.absolutradio.de/absolut-relax" },
         };
 
         public async Task<List<RadioStation>> GetStationsAsync()
