@@ -15,7 +15,7 @@
 
     <Grid Background="{ThemeResource AppBackgroundBrush}">
         <StackPanel>
-        <!-- <StackPanel Margin="20"> -->
+            <!-- <StackPanel Margin="20"> -->
 
             <StackPanel x:Name="AppTitleBar" 
                     Orientation="Horizontal"
@@ -42,7 +42,21 @@
                     Click="ThemeToggleButton_Click"
                     HorizontalAlignment="Right"
                     Margin="8"/>
-            <TextBox x:Name="StatusPane" IsReadOnly="True" PlaceholderText="" Margin="0,10,0,10"/>
+            <!-- <TextBox x:Name="StatusPane" IsReadOnly="True" PlaceholderText="" Margin="0,10,0,10"/> -->
+            <Border x:Name="NowPlayingBorder"
+                    Background="{ThemeResource TextControlBackground}"
+                    BorderBrush="{ThemeResource TextControlBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="6,3"
+                    Margin="8,4,8,4">
+                <TextBlock x:Name="NowPlayingTextBlock" FontSize="16" Margin="10">
+                        <Run x:Name="StationNameRun" Text="Station" Foreground="Gray"/>
+                        <Run x:Name="HyphenRun" Text=" - " Foreground="Gray"/>
+                        <Run x:Name="NowPlayingRun" Text="Now Playing" Foreground="DarkOrange"/>
+                </TextBlock>
+            </Border>
+
             <ListView x:Name="StationsList" Height="300">
                 <ListView.ItemTemplate>
                     <DataTemplate>

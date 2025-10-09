@@ -19,6 +19,8 @@ namespace InternetRadio.Services
             new RadioStation { Name = "NPR News", Url = "https://npr-ice.streamguys1.com/live.mp3" },
             new RadioStation { Name = "Classic FM (UK)", Url = "https://media-ice.musicradio.com/ClassicFMMP3" },
             new RadioStation { Name = "1.FM - Adore Jazz Radio (CH)", Url = "http://strm112.1.fm/ajazz_mobile_mp3" },
+            new RadioStation { Name = "1.FM - Chillout Lounge Radio (CH)", Url = "http://strm112.1.fm/chilloutlounge_mobile_mp3" },
+            new RadioStation { Name = "1.FM - Radio Gaia (CH)", Url = "http://strm112.1.fm/radiogaia_mobile_mp3" }, 
             new RadioStation { Name = "Radio Paradise Mellow Mix 320k AAC", Url = "http://stream.radioparadise.com/mellow-320" },
             new RadioStation { Name = "Deutschlandfunk", Url = "https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3" },
             new RadioStation { Name = "Soma FM - Left Coast 70s", Url = "https://ice6.somafm.com/seventies-320-mp3" },

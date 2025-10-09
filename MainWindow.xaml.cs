@@ -1,10 +1,14 @@
+//using ABI.System;
+using InternetRadio.Models;
+using InternetRadio.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Documents;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.Media.Core;
-using InternetRadio.Models;
+using Windows.Media.Playback;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -18,7 +22,14 @@ namespace InternetRadio
     public sealed partial class MainWindow : Window
     {
         public ObservableCollection<RadioStation> Stations { get; set; } = new();
-       
+
+        private RadioStation? _currentStation;
+        private string _lastMetadata = string.Empty;
+        private DateTime _lastMetadataTime = DateTime.MinValue;
+        private DispatcherTimer? _metadataTimer;
+
+        private readonly IcyMetadataService _icyService = new();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -36,10 +47,15 @@ namespace InternetRadio
             StationsList.ItemsSource = Stations;
             _ = LoadStationsAsync();
         }
+
         private async Task LoadStationsAsync()
         {
-            if (StatusPane != null)
-                StatusPane.Text = "Loading stations...";
+            if (StationNameRun != null)
+            {
+                StationNameRun.Text = "Loading stations...";
+                HyphenRun.Text = "";
+                NowPlayingRun.Text = "";
+            }
 
             var service = new Services.RadioBrowserService();
             var stations = await service.GetStationsAsync();
@@ -48,24 +64,102 @@ namespace InternetRadio
             foreach (var station in stations)
                 Stations.Add(station);
 
-            if (StatusPane != null)
-                StatusPane.Text = "";
+            if (StationNameRun != null)
+                StationNameRun.Text = "";
+               
         }
 
-        private void PlayButton_Click(object sender, RoutedEventArgs e)
+        private async Task UpdateNowPlayingAsync()
         {
-            var button = (Button)sender;
-            var streamUrl = button.Tag?.ToString();
-            if (!string.IsNullOrEmpty(streamUrl))
-            {
-                var mediaSource = MediaSource.CreateFromUri(new Uri(streamUrl));
-                Player.Source = mediaSource;
-            }
+            if (_currentStation == null)
+                return;
 
-            // update SearchBox with the station name
-            if (button.DataContext is RadioStation station)
+            try
             {
-                StatusPane.Text = $"Now Playing: {station.Name}";
+                string? meta = await _icyService.GetNowPlayingAsync(_currentStation.Url);
+
+                if (!string.IsNullOrEmpty(meta))
+                {
+                    _lastMetadata = meta;
+                    _lastMetadataTime = DateTime.Now;
+                }
+                else if ((DateTime.Now - _lastMetadataTime).TotalMinutes > 2)
+                {
+                    _lastMetadata = string.Empty; // expire stale data
+                }
+
+                if (!string.IsNullOrEmpty(_lastMetadata) && !string.IsNullOrEmpty(_currentStation.Name))
+                {
+                    StationNameRun.Text = $"{_currentStation.Name}";
+                    HyphenRun.Text = " - ";
+                    NowPlayingRun.Text = $"{_lastMetadata}";
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(_currentStation.Name))
+                    {
+                        StationNameRun.Text = $"{_currentStation.Name}";
+                        HyphenRun.Text = "";
+                        NowPlayingRun.Text = "";
+                    }
+                }
+            }
+            catch
+            {
+                // Silently ignore errors, keep last known text
+            }
+        }
+
+
+        private void MediaPlayer_CurrentStateChanged(Windows.Media.Playback.MediaPlayer sender, object args)
+        {
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                switch (sender.CurrentState)
+                {
+                    case Windows.Media.Playback.MediaPlayerState.Playing:
+                        // Start or restart the metadata timer
+                        _metadataTimer?.Stop();
+                        _metadataTimer = new DispatcherTimer
+                        {
+                            Interval = TimeSpan.FromSeconds(5)
+                        };
+                        _metadataTimer.Tick += async (s, e) => await UpdateNowPlayingAsync();
+                        _metadataTimer.Start();
+                        break;
+
+                    case Windows.Media.Playback.MediaPlayerState.Paused:
+                    case Windows.Media.Playback.MediaPlayerState.Stopped:
+                        // Stop metadata updates when paused or stopped
+                        _metadataTimer?.Stop();
+                        break;
+                }
+            });
+        }
+
+
+        private async void PlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is RadioStation station)
+            {
+                _currentStation = station; // store selected station
+                Player.Source = MediaSource.CreateFromUri(new Uri(station.Url));
+                Player.MediaPlayer.Play();
+
+                // subscribe to state changes to update metadata when playback starts/pauses/stops
+                Player.MediaPlayer.CurrentStateChanged += MediaPlayer_CurrentStateChanged;
+
+                // on play button click, the last metadata should be cleared
+                _lastMetadata = string.Empty;
+                _metadataTimer?.Stop();
+                _metadataTimer = new DispatcherTimer
+                {
+                    Interval = TimeSpan.FromSeconds(5)
+                };
+                _metadataTimer.Tick += async (s, ev) => await UpdateNowPlayingAsync();
+                _metadataTimer.Start();
+
+                await UpdateNowPlayingAsync(); // first refresh immediately
             }
         }
 
