@@ -76,16 +76,16 @@ namespace InternetRadio
 
             try
             {
-                string? meta = await _icyService.GetNowPlayingAsync(_currentStation.Url);
+                var metaResult = await IcyMetadataReader.TryGetIcyMetadataAsync(_currentStation.Url);
 
-                if (!string.IsNullOrEmpty(meta))
+                if (metaResult != null && !string.IsNullOrEmpty(metaResult.Title))
                 {
-                    _lastMetadata = meta;
+                    _lastMetadata = metaResult.Title;
                     _lastMetadataTime = DateTime.Now;
                 }
                 else if ((DateTime.Now - _lastMetadataTime).TotalMinutes > 2)
                 {
-                    _lastMetadata = string.Empty; // expire stale data
+                    _lastMetadata = string.Empty;
                 }
 
                 if (!string.IsNullOrEmpty(_lastMetadata) && !string.IsNullOrEmpty(_currentStation.Name))
@@ -106,7 +106,7 @@ namespace InternetRadio
             }
             catch
             {
-                // Silently ignore errors, keep last known text
+                // ignore transient errors
             }
         }
 

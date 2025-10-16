@@ -27,6 +27,7 @@ namespace InternetRadio.Services
             new RadioStation { Name = "Soma FM - Left Coast 70s", Url = "https://ice6.somafm.com/seventies-320-mp3" },
             new RadioStation { Name = "Klassik Radio - Live", Url = "https://live.streams.klassikradio.de/klassikradio-deutschland/stream/mp3" },
             new RadioStation { Name = "Absolut Relax", Url = "https://absolut-relax.live-sm.absolutradio.de/absolut-relax" },
+            new RadioStation { Name = "Lounge plus", Url = "https://addrad.io/4455g42" }
         };
 
         public async Task<List<RadioStation>> GetStationsAsync()
